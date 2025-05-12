@@ -94,43 +94,90 @@ exports.Userlogin = async (req, res) => {
 };
 
 
-  exports.completeProfile = async (req, res) => {
-    try {
-      const userId = req.params.id;
-      const {
-        country, state, city, pincode,
-        institutionType, institutionName,
-        classOrYear
-      } = req.body;
-  
-      if (pincode && !/^\d+$/.test(pincode)) {
-        return res.status(400).json({ message: 'Invalid Pincode' });
-      }
-  
-      const updatedFields = {
-        country,
-        state,
-        city,
-        pincode,
-        institutionType,
-        institutionName,
-        classOrYear
-      };
-  
-      if (req.files?.aadharCard) {
-        updatedFields.aadharCard = req.files.aadharCard[0].path;
-      }
-  
-      if (req.files?.lastYearMarksheet) {
-        updatedFields.lastYearMarksheet = req.files.lastYearMarksheet[0].path;
-      }
-  
-      const updatedUser = await User.findByIdAndUpdate(userId, updatedFields, { new: true });
-  
-      res.status(200).json({ message: 'Profile updated. Redirecting to home page.', user: updatedUser });
-    } catch (error) {
-      const fileError = error.message.includes('file') ? error.message : 'Server error';
-      res.status(500).json({ message: fileError });
+exports.completeProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+
+    const {
+      country, state, city, pincode,
+      institutionType, institutionName,
+      classOrYear
+    } = req.body;
+
+    if (pincode && !/^\d+$/.test(pincode)) {
+      return res.status(400).json({ message: 'Invalid Pincode' });
     }
-  };
+
+    const updatedFields = {
+      country,
+      state,
+      city,
+      pincode,
+      institutionType,
+      institutionName,
+      classOrYear
+    };
+
+    if (req.files?.aadharCard) {
+      updatedFields.aadharCard = req.files.aadharCard[0].path;
+    }
+
+    if (req.files?.lastYearMarksheet) {
+      updatedFields.lastYearMarksheet = req.files.lastYearMarksheet[0].path;
+    }
+
+    const updatedUser = await User.findByIdAndUpdate(userId, updatedFields, { new: true });
+
+    res.status(200).json({
+      message: 'Profile updated. Redirecting to home page.',
+      user: updatedUser
+    });
+   } catch (error) {
+    console.error('Complete Profile Error:', error); 
+    res.status(500).json({ message: error.message }); 
+  }
+};
+
+
+
+
+  // exports.completeProfile = async (req, res) => {
+  //   try {
+    
+  //     const {
+  //       country, state, city, pincode,
+  //       institutionType, institutionName,
+  //       classOrYear
+  //     } = req.body;
+  
+  //     if (pincode && !/^\d+$/.test(pincode)) {
+  //       return res.status(400).json({ message: 'Invalid Pincode' });
+  //     }
+  
+  //     const updatedFields = {
+  //       country,
+  //       state,
+  //       city,
+  //       pincode,
+  //       institutionType,
+  //       institutionName,
+  //       classOrYear
+  //     };
+  
+  //     if (req.files?.aadharCard) {
+  //       updatedFields.aadharCard = req.files.aadharCard[0].path;
+  //     }
+  
+  //     if (req.files?.lastYearMarksheet) {
+  //       updatedFields.lastYearMarksheet = req.files.lastYearMarksheet[0].path;
+  //     }
+  
+  //     const updatedUser = await User.findByIdAndUpdate( updatedFields, { new: true });
+  
+  //     res.status(200).json({ message: 'Profile updated. Redirecting to home page.', user: updatedUser });
+  //   } catch (error) {
+  //     const fileError = error.message.includes('file') ? error.message : 'Server error';
+  //     res.status(500).json({ message: fileError });
+  //   }
+  // };
   
