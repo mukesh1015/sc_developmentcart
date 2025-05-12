@@ -94,14 +94,65 @@ exports.Userlogin = async (req, res) => {
 };
 
 
+// exports.completeProfile = async (req, res) => {
+//   try {
+//     const userId = req.user.id;
+
+//     const {
+//       country, state, city, pincode,
+//       institutionType, institutionName,
+//       classOrYear
+//     } = req.body;
+
+//     if (pincode && !/^\d+$/.test(pincode)) {
+//       return res.status(400).json({ message: 'Invalid Pincode' });
+//     }
+
+//     const updatedFields = {
+//       country,
+//       state,
+//       city,
+//       pincode,
+//       institutionType,
+//       institutionName,
+//       classOrYear
+//     };
+
+//     if (req.files?.aadharCard) {
+//       updatedFields.aadharCard = req.files.aadharCard[0].path;
+//     }
+
+//     if (req.files?.lastYearMarksheet) {
+//       updatedFields.lastYearMarksheet = req.files.lastYearMarksheet[0].path;
+//     }
+
+//     const updatedUser = await User.findByIdAndUpdate(userId, updatedFields, { new: true });
+
+//     res.status(200).json({
+//       message: 'Profile updated. Redirecting to home page.',
+//       user: updatedUser
+//     });
+//    } catch (error) {
+//     console.error('Complete Profile Error:', error); 
+//     res.status(500).json({ message: error.message }); 
+//   }
+// };
+
+
 exports.completeProfile = async (req, res) => {
   try {
     const userId = req.user.id;
 
     const {
-      country, state, city, pincode,
-      institutionType, institutionName,
-      classOrYear
+      countryId,
+      stateId,
+      cityId,
+      pincode,
+      studentType,
+      schoolName,
+      instituteName,
+      collegeName,
+      className,
     } = req.body;
 
     if (pincode && !/^\d+$/.test(pincode)) {
@@ -109,35 +160,37 @@ exports.completeProfile = async (req, res) => {
     }
 
     const updatedFields = {
-      country,
-      state,
-      city,
+      countryId,
+      stateId,
+      cityId,
       pincode,
-      institutionType,
-      institutionName,
-      classOrYear
+      studentType,
+      schoolName,
+      instituteName,
+      collegeName,
+      className,
     };
 
-    if (req.files?.aadharCard) {
+    // Handling file uploads
+    if (req.files?.aadharCard?.[0]) {
       updatedFields.aadharCard = req.files.aadharCard[0].path;
     }
 
-    if (req.files?.lastYearMarksheet) {
-      updatedFields.lastYearMarksheet = req.files.lastYearMarksheet[0].path;
+    if (req.files?.marksheet?.[0]) {
+      updatedFields.marksheet = req.files.marksheet[0].path;
     }
 
     const updatedUser = await User.findByIdAndUpdate(userId, updatedFields, { new: true });
 
     res.status(200).json({
       message: 'Profile updated. Redirecting to home page.',
-      user: updatedUser
+      user: updatedUser,
     });
-   } catch (error) {
-    console.error('Complete Profile Error:', error); 
-    res.status(500).json({ message: error.message }); 
+  } catch (error) {
+    console.error('Complete Profile Error:', error);
+    res.status(500).json({ message: error.message });
   }
 };
-
 
 
 

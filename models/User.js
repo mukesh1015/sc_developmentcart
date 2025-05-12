@@ -1,3 +1,4 @@
+
 const mongoose = require('mongoose');
 
 const userSchema = new mongoose.Schema({
@@ -7,15 +8,17 @@ const userSchema = new mongoose.Schema({
   mobileNumber: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
-  country: String,
-  state: String,
-  city: String,
-  pincode: String,
-  institutionType: String, 
-  institutionName: String,
-  classOrYear: String,
-  aadharCard: String,
-  lastYearMarksheet: String,
+  countryId: { type: mongoose.Schema.Types.ObjectId, ref: 'Location' },
+  stateId: { type: mongoose.Schema.Types.ObjectId, ref: 'Location' },
+  cityId: { type: mongoose.Schema.Types.ObjectId, ref: 'Location' },
+  pincode: { type: String },
+  studentType: { type: String }, 
+  schoolName: { type: String },
+  instituteName:  { type: String }, 
+  collegeName:  { type: String }, 
+  aadharCard: { type: String },
+  marksheet: { type: String },
+  className: { type: mongoose.Schema.Types.ObjectId, ref: 'School' },
   createdAt: { type: Date, default: Date.now }
 });
 
